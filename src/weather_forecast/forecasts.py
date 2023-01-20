@@ -8,10 +8,9 @@ import pandas
 
 
 class Forecasts:
+    def __init__(self, csv_location="weather.csv"):
 
-    weather_dataframe = pandas.read_csv(
-        "/home/guus/python/projects/assignment/weather_forecast/src/weather_forecast/weather.csv"
-    )
+        self.weather_dataframe = pandas.read_csv(csv_location)
 
     def get_forecast(self, now, then):
         belief_horizon_in_sec = self.get_belief_horizon_in_sec(now, then)

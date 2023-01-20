@@ -25,6 +25,7 @@ def has_no_empty_params(rule):
 
 @app.route("/", methods=["GET"])
 def routes():
+    """This function returns all possible paths"""
     urls = {}
     for rule in app.url_map.iter_rules():
         if "GET" in rule.methods and has_no_empty_params(rule):
@@ -36,6 +37,7 @@ def routes():
 
 @app.route("/forecasts/", methods=["GET"])
 def forecast():
+    """This function can be used to get a forecast with the following url structure: /forecasts?now=YYYY-MM-DDThh:mm:ss+hh:mm&then=YYYY-MM-DDThh:mm:ss+hh:mm"""
 
     now = request.args.get("now")
     then = request.args.get("then")
@@ -55,13 +57,14 @@ def forecast():
             description="incorrect datetime format, use iso format, example: YYYY-MM-DDThh:mm:ss+hh:mm",
         )
 
-    forecast = forecasts.get_forecast(datetime_now, datetime_then)
+    forecast_dict = forecasts.get_forecast(datetime_now, datetime_then)
 
-    return jsonify(forecast)
+    return jsonify(forecast_dict)
 
 
 @app.route("/tomorrow/", methods=["GET"])
 def tomorrow():
+    """This function can be used to get 3 booleans whether the forecast for tomorrow is windy, sunny or rainy. With the following url structure this data can be called: /tommorow?now=YYYY-MM-DDThh:mm:ss+hh:mm&then=YYYY-MM-DDThh:mm:ss+hh:mm"""
     now = request.args.get("now")
     if not now:
         abort(
@@ -84,8 +87,6 @@ def tomorrow():
 @app.errorhandler(404)
 def resource_not_found(e):
     return jsonify(error=str(e)), 404
-
-
 
 
 if __name__ == "__main__":
